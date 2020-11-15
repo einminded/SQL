@@ -1,0 +1,94 @@
+--At the beginning we have to create tables with PK
+
+CREATE TABLE prisoners (
+ prisoners _id INT NOT NULL,
+ prisoners _name VARCHAR(20) NOT NULL,
+ prisoners _sname VARCHAR(20) NOT NULL,
+ prisoners _birth DATE NOT NULL,
+ prisoners _enter DATE NOT NULL,
+ prisoners _esc DATE,
+ prisoners _room INT NOT NULL,
+ prisoners _crime VARCHAR(100) NOT NULL
+);
+CREATE TABLE visitors (
+ visitors_id INT NOT NULL,
+ visitors_name VARCHAR(20) NOT NULL,
+ visitors_sname VARCHAR(20) NOT NULL,
+ visitors_date DATE NOT NULL,
+ visitors_ prisoners INT NOT NULL
+);
+CREATE TABLE room (
+ room_id INT NOT NULL,
+ room_num INT,
+ room_cam INT,
+ room_overs INT
+);
+CREATE TABLE cameras (
+ camera_id INT NOT NULL,
+ camera_loc VARCHAR(100)
+);
+CREATE TABLE overseers (
+ overseers _id INT NOT NULL,
+ overseers _name VARCHAR(20) NOT NULL,
+ overseers_sname VARCHAR(20) NOT NULL,
+ overseers_birth DATE,
+ overseers_time INT
+);
+CREATE TABLE timetable (
+ time_id INT NOT NULL,
+ for_ VARCHAR(20) NOT NULL,
+ time_ TIME
+);
+CREATE TABLE security (
+ security_id INT NOT NULL,
+ security_name VARCHAR(20) NOT NULL,
+ security_sname VARCHAR(20) NOT NULL,
+ security_birth DATE,
+ security_position VARCHAR(30) NOT NULL,
+ security_timetable INT
+);
+CREATE TABLE staff (
+ staff_id INT NOT NULL,
+ staff_name VARCHAR(20) NOT NULL,
+ staff_sname VARCHAR(20) NOT NULL,
+ staff_room INT NOT NULL,
+ staff_timetable INT
+);
+CREATE TABLE caller (
+ caller_id INT NOT NULL,
+ caller_name VARCHAR(20) NOT NULL,
+ caller_time INT
+);
+CREATE TABLE eqipment (
+ eqipment _id INT NOT NULL,
+ eqipment _loc VARCHAR(100),
+ eqipment _sec VARCHAR(100),
+ eqipment _overs INT
+);
+
+--As we done with tables now we have to add FK to PK
+
+ALTER TABLE prisoners ADD CONSTRAINT pr_pk PRIMARY KEY (prisoners_id);
+ALTER TABLE visitors ADD CONSTRAINT vis_pk PRIMARY KEY (visitors_id);
+ALTER TABLE room ADD CONSTRAINT room_pk PRIMARY KEY (room_id);
+ALTER TABLE cameras ADD CONSTRAINT cam_pk PRIMARY KEY (camera_id);
+ALTER TABLE overseers ADD CONSTRAINT over_pk PRIMARY KEY (overseers_id);
+ALTER TABLE timetable ADD CONSTRAINT time_pk PRIMARY KEY (timetable_id);
+ALTER TABLE security ADD CONSTRAINT sec_pk PRIMARY KEY (security_id);
+ALTER TABLE staff ADD CONSTRAINT st_pk PRIMARY KEY (staff_id);
+ALTER TABLE caller ADD CONSTRAINT call_pk PRIMARY KEY (caller_id);
+ALTER TABLE equipment ADD CONSTRAINT eq_pk PRIMARY KEY (equipment_id);
+
+
+ALTER TABLE prisoners ADD CONSTRAINT pr_fk1 FOREIGN KEY (prisoners_room) REFERENCES room (room_id);
+ALTER TABLE prisoners ADD CONSTRAINT pr_fk2 FOREIGN KEY (prisoners_escape) REFERENCES caller (caller_id);
+ALTER TABLE visitors ADD CONSTRAINT vis_fk FOREIGN KEY (visitors_prisoners) REFERENCES prisoners (prisoners_id);
+ALTER TABLE rooms ADD CONSTRAINT room_fk1 FOREIGN KEY (room_camera) REFERENCES cameras (camera_id);
+ALTER TABLE rooms ADD CONSTRAINT room_fk2 FOREIGN KEY (room_overseers) REFERENCES overseers (overseers_id);
+ALTER TABLE overseers ADD CONSTRAINT over_fk FOREIGN KEY (overseers_time) REFERENCES timetable (timetable_id);
+ALTER TABLE security ADD CONSTRAINT sec_fk FOREIGN KEY (security_timetable) REFERENCES timetable (timetable_id);
+ALTER TABLE equipment ADD CONSTRAINT eq_fk1 FOREIGN KEY (equipment_overs) REFERENCES overseers (overseers_id);
+ALTER TABLE equipment ADD CONSTRAINT eq_fk2 FOREIGN KEY (equipment_sec) REFERENCES security (security_id);
+ALTER TABLE caller ADD CONSTRAINT call_fk FOREIGN KEY (caller_time) REFERENCES timetable (timetable_id);
+ALTER TABLE staff ADD CONSTRAINT staff_fk1 FOREIGN KEY (staff_room) REFERENCES room (room_id);
+ALTER TABLE staff ADD CONSTRAINT staff_fk2 FOREIGN KEY (staff_timetable) REFERENCES timetable (timetable_id);
